@@ -1,4 +1,4 @@
-// Cutting jig for Stedi sponge strips (80 x 20 x 5 mm): every piece the same length and square.
+// Cutting jig for Stedi sponge strips (80 x 20 x 5 mm): three equal, square pieces, nothing wasted.
 //
 // A mitre box. The strip slides along a low channel into the stop. A guide block bridges the channel
 // at the cut, with the knife slot through it, so the blade is held for the whole stroke, not just
@@ -8,13 +8,17 @@
 // Use: push the strip to the stop. Put the blade in the slot, slanted like a normal cut, and pull it
 // toward you across the strip, keeping it against the slot face nearest the stop (exactly piece_len
 // from the stop). Slide the piece out, push the strip up to the stop, repeat. Three pieces per strip.
+// The slot sits (strip_len - 2 kerf)/3 from the stop, so after two cuts the offcut is the same length as
+// the first two pieces.
 //
-//   openscad -o stl/cut_jig_26.stl cut_jig.scad
+//   openscad -o stl/cut_jig.stl cut_jig.scad
 //
 // Prints floor-down, no supports: the guide block's underside is a 20.4 mm bridge, split by the slot.
 // One piece on purpose: slot, wall slots, floor groove and stop stay aligned; a bolt-on guide would add slop.
 
-piece_len  = 26;    // match pad_len in sponge_head.scad
+strip_len  = 80;
+kerf       = 0.5;   // material the blade removes per cut (18 mm snap-off blade)
+piece_len  = (strip_len - 2*kerf)/3;   // 26.33: three equal pieces
 strip_w    = 20;
 strip_t    = 5;
 clear      = 0.4;   // channel width over the strip: slides freely, no wander
@@ -55,7 +59,7 @@ difference() {
   // length label on the outside of the guide block, beside the slot (the 14 mm tall face)
   translate([(xs + slot_w + gx1)/2, label_d, (zt + guide_h)/2]) rotate([90, 0, 0])
     linear_extrude(label_d + 1)
-      text(str(piece_len), size = 5, font = "Liberation Sans:style=Bold", halign = "center", valign = "center");
+      text(str(round(piece_len*10)/10), size = 5, font = "Liberation Sans:style=Bold", halign = "center", valign = "center");
   // slot lead-in: a small V at the top of the guide block
   ztop = zt + guide_h;
   translate([0, -1, 0]) rotate([-90, 0, 0]) linear_extrude(W + 2)

@@ -1,8 +1,8 @@
 // Render scenes for the README. Driven by render.sh: openscad -D 'scene="hero"' scenes.scad
 scene = "hero";
 
-HEAD = "../stl/sponge_head_26_fit0.2.stl";
-JIG  = "../stl/cut_jig_26.stl";
+HEAD = "../stl/sponge_head.stl";
+JIG  = "../stl/cut_jig.stl";
 fit  = 0.2;
 
 // colours
@@ -15,7 +15,7 @@ module sponge(lift = 0) color(C_FOAM)
   translate([pocket_x0, -(20 - fit)/2, 1.0 + lift]) cube([26 - fit, 20 - fit, 5]);
 
 // ---- jig ----
-xs = 29;   // slot face nearest the stop
+xs = 3 + (80 - 1)/3;   // slot face nearest the stop
 module jig(alpha = 1) color(C_PART, alpha) import(JIG);
 module strip(x = 3) color(C_FOAM) translate([x, 3.2, 2]) cube([80, 20, 5]);
 
@@ -51,9 +51,9 @@ if (scene == "jig2")     { jig(0.5); strip(); knife(6); arrow([xs + 6, -6, 24], 
 if (scene == "jig3") {
   jig(0.5); strip(); knife(10, 0.3);
   color(C_RED) {
-    arrow([16, -7, 15], [3, -7, 15], 1.2); arrow([16, -7, 15], [29, -7, 15], 1.2);
-    for (x = [3, 29]) translate([x - 0.3, -10, 15]) cube([0.6, 9, 0.5]);
+    arrow([16, -7, 15], [3, -7, 15], 1.2); arrow([16, -7, 15], [xs, -7, 15], 1.2);
+    for (x = [3, xs]) translate([x - 0.3, -10, 15]) cube([0.6, 9, 0.5]);
   }
-  translate([16, -15, 15]) label("26 mm", col = "#a4161a");
+  translate([16, -15, 15]) label("26.3 mm", col = "#a4161a");
   translate([-12, 13.2, 15]) label("stop");
 }

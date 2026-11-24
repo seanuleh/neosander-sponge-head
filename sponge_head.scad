@@ -8,9 +8,9 @@
 // same side as the peg), z = pad width. y = 3.17 is the flat face HOZO prints on the bed; the tray
 // floor sits in that same plane, so the whole head prints flat with no supports.
 //
-//   openscad -o stl/sponge_head_26_fit0.4.stl -D pad_len=26 -D fit=0.4 sponge_head.scad
+//   openscad -o stl/sponge_head.stl sponge_head.scad
 
-pad_len    = 26;    // sponge piece length. 26 -> three per 80 mm strip, 40 -> two per strip
+pad_len    = 26;    // nominal sponge piece length (the jig cuts 26.3, which still fits: it bows a little)
 sponge_w   = 20;    // measured strip width
 fit        = 0.2;   // pocket undersize per side-pair: foam squeezes in and holds
 depth      = 2.2;   // pocket depth; 5 mm sponge stands ~2.8 mm proud
@@ -18,8 +18,7 @@ floor_t    = 1.0;
 wall       = 0.8;   // two 0.4 mm lines
 taper      = 5;     // neck length from the HOZO cut to the tray
 push_hole  = 4;     // through-hole in the floor to push a worn sponge out (0 = none)
-label      = str(fit);  // engraved into the flat back so test variants can be told apart
-label_d    = 0.4;   // engraving depth (floor is 1.0, leaves 0.6 under the sponge)
+peg_grow   = 0.6;   // locking peg diameter added to HOZO's 3.0 mm, so it seats snugly in the tool's detent
 
 y_bed  = 3.17;                 // HOZO bed face
 y_top  = y_bed - floor_t - depth;
@@ -36,6 +35,16 @@ module hozo_plug()
     translate([0, -10, -10]) cube([30, 20, 20]);
   }
 
+// HOZO's round locking peg (d 3.0, centre x 15.75, tip y -3.17) is slightly small in the tool, so the head
+// rocks out of the detent. Widen it: same height, same centre, chamfered back to HOZO's tip diameter.
+peg_x = 15.75;
+peg_tip = -3.17;
+module peg_widen()
+  translate([peg_x, 0, 0]) rotate([90, 0, 0]) hull() {
+    translate([0, 0, 1.2]) cylinder(d = 3 + peg_grow, h = -peg_tip - 1.2 - 0.3, $fn = 64);
+    translate([0, 0, -peg_tip - 0.3 - eps]) cylinder(d1 = 3 + peg_grow, d2 = 3.0, h = 0.3, $fn = 64);
+  }
+
 // box in HOZO coords: x from xa to xb, y from ya to yb, z centred, width w
 module slab(xa, xb, ya, yb, w)
   translate([xa, ya, -w/2]) cube([xb - xa, yb - ya, w]);
@@ -47,10 +56,6 @@ module tray()
     if (push_hole > 0)
       translate([x0 - tl/2, y_bed + 1, 0]) rotate([90, 0, 0])
         cylinder(d = push_hole, h = floor_t + 2, $fn = 32);
-    // label on the bed face, between the push hole and the tip, reading along the pad
-    translate([x0 - tl + 1.6, y_bed - label_d, 0]) rotate([-90, 0, 0])
-      linear_extrude(label_d + 1)
-        text(label, size = 4.5, font = "Liberation Sans:style=Bold", valign = "center");
   }
 
 // neck: HOZO's neck section at the cut (z +-1.88, y -1.17..3.17) blended into the tray's back wall
@@ -60,7 +65,7 @@ module neck()
     slab(x0 - wall, x0, y_top, y_bed, tw);
   }
 
-module head() union() { hozo_plug(); neck(); tray(); }
+module head() union() { hozo_plug(); peg_widen(); neck(); tray(); }
 
 // print orientation, same as HOZO's 3MF: y_bed face down on z = 0
 rotate([-90, 0, 0]) translate([0, -y_bed, 0]) head();
