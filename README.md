@@ -22,10 +22,12 @@ A HOZO NeoSander head that holds a piece of Stedi 5 mm wet-and-dry sanding spong
 
   About 1.7 g each. HOZO's own paddle weighs 1.2 g and they warn against heavy heads. `pad_len=40` (two pieces per
   strip, 2.2 g) is available if the 26 feels too small.
-- **Cutting jig** (`stl/cut_jig_26.stl`, source `cut_jig.scad`): slide the strip in until it hits the stop, then
-  run a snap-off knife down the slot with the blade against the face nearest the stop. That face is exactly 26 mm
-  from the stop. Push the strip up to the stop and repeat. One strip gives three pieces. The slot is 1 mm wide, and
-  the 14 mm walls keep the blade vertical so the cut is square.
+- **Cutting jig** (`stl/cut_jig_26.stl`, source `cut_jig.scad`): a mitre box. Feed the strip under the guide
+  block until it hits the stop. Put the blade in the slot, slanted like a normal cut, and pull it toward you across
+  the strip, keeping it against the slot face nearest the stop (exactly 26 mm from it). The 6 mm guide block holds
+  the blade for the whole stroke and keeps the foam flat. A floor groove lets the blade cut right through. One
+  strip gives three pieces. Picture guide: `renders/cut_jig_howto.png`. It's one piece on purpose, so the slot,
+  groove and stop can't drift apart. The block's underside is a 20 mm bridge, which prints without supports.
 - **Print:** as exported, flat face down, no supports. Same orientation as HOZO's 3MF. PETG, 5 walls, like HOZO's
   profile.
 
