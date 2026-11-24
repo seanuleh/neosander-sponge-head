@@ -80,8 +80,8 @@ are ready to print without it.
 
 ## Status
 
-Printed and tested (2026-11-24). The head fits the NeoSander and holds the sponge. The jig cuts cleanly. The
-widened locking peg is untested.
+Done (2026-11-24). The first prints fit the NeoSander and hold the sponge, and the jig cuts cleanly. The final
+version has the wider locking peg and the equal-thirds jig, sliced and ready to print.
 
 ## Credits
 
